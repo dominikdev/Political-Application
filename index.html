@@ -228,11 +228,13 @@
         </div>
       </div>
     </div>
-    <div class="bw-md-12">
+    <div class="bw-md-12" ng-if="ftbill.summary != null">
       <h4>Summary:</h4>
       <h5 ng-repeat="txt in ftbill.summary">{{txt}}</h5>
     </div>
-
+    <div class="bw-md-12">
+      <h4>Full Bill Text: <a href="{{ftbill.sunlight.last_version.urls.pdf}}" target="_blank"><span class="icono-document" style="color:rgb(26,76,161);"></span></a></h4>
+    </div>
   </div>
 </div>
 </div>
