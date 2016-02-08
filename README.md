@@ -2,7 +2,7 @@ Political Information Web App
 ==============
 This is a project that I am working on to link individuals with information about their representatives and what actions they are taking. It is built using angular and is in the basic stages right now, simply showing representatives, their contact info, and their sponsored bills. It utilizes the GovTrack Open Data API and Sunlight Foundation Congress API
 
-View ProjectPage: [Political Web App](http://dominikdev.com/portfolio/pol/index.html)
+View ProjectPage: [Political Web App](http://dominikdev.github.io/polapp/index.html)
 
 Screenshot
 --------------
