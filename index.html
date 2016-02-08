@@ -86,63 +86,63 @@
 
   <!-- View 3 -->
   <div class='wrapper' id="spot">
-     <div class="back" loc="3"> <span class="icono-caretUpCircle"></span> </div>
-    <div class="container">
-      <div class="row clearfix">        
-        <div class="bw-md-10 bw-md-offset-1">
-          <h2 class="title">{{info.per.more_info.person.name}}</h2>
+   <div class="back" loc="3"> <span class="icono-caretUpCircle"></span> </div>
+   <div class="container">
+    <div class="row clearfix">        
+      <div class="bw-md-10 bw-md-offset-1">
+        <h2 class="title">{{info.per.more_info.person.name}}</h2>
+      </div>
+    </div>
+    <div class="row bw-md-10 bw-md-offset-1">
+      <div class="bw-md-4">
+        <div class="img-wrap">
+          <img src="{{'https://theunitedstates.io/images/congress/original/'+info.per.bioguide_id+'.jpg'}}">
         </div>
       </div>
-      <div class="row bw-md-10 bw-md-offset-1">
-        <div class="bw-md-4">
-          <div class="img-wrap">
-            <img src="{{'https://theunitedstates.io/images/congress/original/'+info.per.bioguide_id+'.jpg'}}">
+      <div class="bw-md-8">
+        <div class="info row">
+          <div class="block b1 bw-md-6">
+            <h4>Overview</h4>
+            <div ng-if="info.per.middle_name"><span>Full Name: </span> {{info.per.first_name + " " + info.per.middle_name + " " + info.per.last_name}}</div>
+            <div ng-if="!info.per.middle_name"><span>Full Name: </span> {{info.per.first_name + " " + info.per.last_name}}</div>
+            <div><span>Party: </span>{{info.per.more_info.party}}</div>
+            <div><span>State: </span> {{info.per.state_name}}</div>
+            <div><span>DOB: </span> {{info.per.birthday}}</div>
           </div>
-        </div>
-        <div class="bw-md-8">
-          <div class="info row">
-            <div class="block b1 bw-md-6">
-              <h4>Overview</h4>
-              <div ng-if="info.per.middle_name"><span>Full Name: </span> {{info.per.first_name + " " + info.per.middle_name + " " + info.per.last_name}}</div>
-              <div ng-if="!info.per.middle_name"><span>Full Name: </span> {{info.per.first_name + " " + info.per.last_name}}</div>
-              <div><span>Party: </span>{{info.per.more_info.party}}</div>
-              <div><span>State: </span> {{info.per.state_name}}</div>
-              <div><span>DOB: </span> {{info.per.birthday}}</div>
-            </div>
-            <div class="block b2 bw-md-6">
-              <h4>Current Role</h4>
-               <div>{{info.per.more_info.description}}</div>
-              <div><span>Current Term: <br/></span> {{ info.per.term_start + " - " + info.per.term_end }}</div><br/>
-            </div>
-            <div class="clearfix"></div>
-            <div class="block b3 bw-md-12">
-              <h4>Contact Info</h4>
-             <div class="bw-md-6">
-                <div><span>Mailing Address: </span><br/>{{ info.per.more_info.extra.address }}</div><br/>
-               <div><span>Phone: </span>{{ info.per.phone }}</div>
-               <div><span>Fax: </span>{{ info.per.fax }}</div>
+          <div class="block b2 bw-md-6">
+            <h4>Current Role</h4>
+            <div>{{info.per.more_info.description}}</div>
+            <div><span>Current Term: <br/></span> {{ info.per.term_start + " - " + info.per.term_end }}</div><br/>
+          </div>
+          <div class="clearfix"></div>
+          <div class="block b3 bw-md-12">
+            <h4>Contact Info</h4>
+            <div class="bw-md-6">
+              <div><span>Mailing Address: </span><br/>{{ info.per.more_info.extra.address }}</div><br/>
+              <div><span>Phone: </span>{{ info.per.phone }}</div>
+              <div><span>Fax: </span>{{ info.per.fax }}</div>
             </div>
             <div class="bw-md-6">
               <div><span>Email: </span><br/>
-                 <a href="{{'mailto:'+info.per.oc_email+''}}">{{info.per.oc_email}}</a></div>
-              <div><span>Website:<br/>
-                 </span><a href="{{'info.per.website'}}" target="_blank">{{info.per.website}}</a></div>
-              <div class="social-icons">
+               <a href="{{'mailto:'+info.per.oc_email+''}}">{{info.per.oc_email}}</a></div>
+               <div><span>Website:<br/>
+               </span><a href="{{'info.per.website'}}" target="_blank">{{info.per.website}}</a></div>
+               <div class="social-icons">
                 <a href="{{'https://twitter.com/'+info.per.twitter_id+''}}" target="_blank"><span class="icono-twitter"></span></a>
                 <a href="{{'https://www.youtube.com/'+info.per.youtube_id+''}}" target="_blank"><span class="icono-youtube"></span></a>
               </div>
-               </div> 
-            </div>
-            <div class="block b4 bw-md-12" id="roles" ng-if="info.per.roles">
-              <h4>Previous Roles <span class="icono-caretDown"></span></h4>
-              <div class="toggle">
-                <div class="inner-toggle">
-                  <div class="role" ng-repeat="r in info.per.roles | orderBy:'-enddate'">
-                    <div class="bw-xs-4">{{r.role_type_label}}</div>
-                    <div class="bw-xs-3">{{r.state}}</div>
-                    <div class="bw-xs-5">{{r.startdate + " - " + r.enddate}}</div>
-                  </div>
+            </div> 
+          </div>
+          <div class="block b4 bw-md-12" id="roles" ng-if="info.per.roles">
+            <h4>Previous Roles <span class="icono-caretDown"></span></h4>
+            <div class="toggle">
+              <div class="inner-toggle">
+                <div class="role" ng-repeat="r in info.per.roles | orderBy:'-enddate'">
+                  <div class="bw-xs-4">{{r.role_type_label}}</div>
+                  <div class="bw-xs-3">{{r.state}}</div>
+                  <div class="bw-xs-5">{{r.startdate + " - " + r.enddate}}</div>
                 </div>
+              </div>
 <!--                 <div class="role">
                   <div class="bw-xs-4">Junior Class 2 Senator</div>
                   <div class="bw-xs-3">New Jersey</div>
@@ -169,25 +169,81 @@
       <table id="btable">
         <thead>
           <tr>
-            <th>Type</th>
-            <th>Name</th>
-            <th>Current Status</th>
+            <th>Title</th>
+            <th>Date Introduced</th>
+            <th>Chamber</th>
+            <th>Congress</th>
+            <th>Last Action</th>
+            <!-- <th>Current Status</th> -->
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="b in hBills">
-            <td>{{b.bill_resolution_type}}</td>
-            <td>{{b.title}}</td>
-            <td>{{b.current_status_description}}</td>
+          <tr class="spon-bills" ng-repeat="b in hBills" ng-click="highlightBill(b.sunlight.number)">
+            <td>{{b.sunlight.official_title}}</td>
+            <td>{{b.sunlight.introduced_on}}</td>
+            <td>{{b.sunlight.chamber}}</td>
+            <td>{{b.sunlight.congress}}</td>
+            <!-- <td>{{b.congress}}</td> -->
+            <td>{{b.govtrack.current_status_description}}</td>
           </tr>
         </tbody>
       </table>
     </div>
-  </div>
+  </div> <!-- END Bill List -->
 
-  <script src="js/jquery-2.1.4.min.js" type="text/javascript"></script>
-  <script src="js/jquery.tablesorter.js" type="text/javascript"></script>
-  <script src="js/angular.js" type="text/javascript"></script>
-  <script src="js/product.js" type="text/javascript"></script>
+  <div class="wrapper" id="bill-highlight">
+    <div class="container">
+     <div class="back" loc="5"><span class="icono-caretUpCircle"></span> </div>
+     <div class="bw-md-12">
+      <h1>{{ftbill.govtrack.display_number}}</h1>
+      <h3>{{ftbill.sunlight.official_title}}</h3>
+    </div>
+
+    <div class="bw-md-2">
+      <div class="bill-status {{ftbill.govtrack.is_alive}}"><span>Live Bill:</span> {{ftbill.govtrack.is_alive}}</div>
+    </div>
+    <div class="bw-md-2">
+      <div class="bill-status {{ftbill.sunlight.history.enacted}}"><span>Enacted:</span> {{ftbill.sunlight.history.enacted}}</div>
+    </div>
+    <div class="bw-md-2">
+      <div class="bill-status {{ftbill.sunlight.history.active}}"><span>Active Bill:</span> {{ftbill.sunlight.history.active}}</div>
+    </div>
+    <div class="bw-md-3">
+      <div class="bill-status"><span>Date Introduced:</span> {{ftbill.sunlight.introduced_on}}</div>
+    </div>
+    <div class="bw-md-3">
+      <div class="bill-status"><span>Date Of Last Action:</span> {{ftbill.sunlight.last_action_at}}</div>
+    </div>
+
+    <div class="bw-md-12">
+      <h4>Current Status:</h4>
+      <h5>{{ftbill.govtrack.current_status_description}}</h5>
+    </div>
+    <div class="bw-md-12">
+      <h4>Major Actions</h4>
+      <div class="major-actions" ng-repeat="act in ftbill.govtrack.major_actions">
+        <div class="row">
+          <div class="bw-md-2 bw-md-offset-1" ng-bind="cleanupDate(act[0])"></div>
+          <div class="bw-md-8">{{act[2]}}</div>
+        </div>
+      </div>
+    </div>
+    <div class="bw-md-12">
+      <h4>Summary:</h4>
+      <h5 ng-repeat="txt in ftbill.summary">{{txt}}</h5>
+    </div>
+
+  </div>
+</div>
+</div>
+
+
+
+</div>
+
+<script src="js/jquery-2.1.4.min.js" type="text/javascript"></script>
+<script src="js/jquery.tablesorter.js" type="text/javascript"></script>
+<script src="js/angular.js" type="text/javascript"></script>
+<script src="js/product.js" type="text/javascript"></script>
 </body>
 </html>

@@ -3,6 +3,8 @@ var polApp = angular.module('polApp', []);
 
 polApp.controller('ctrl', function($scope) {
 
+	var sunBillTerms = ["bill_id","chamber","congress","history","introduced_on","last_action_at","last_version","last_version_on","number","official_title","popular_title","short_title","urls"];
+	var govBillTerms = ["current_status","id","current_status_description","current_status_label","display_number","number","is_alive","is_current","link","major_actions","terms","thomas_link"];
 	$scope.info = {
 		zip : "",
 		reps : {},
@@ -10,6 +12,8 @@ polApp.controller('ctrl', function($scope) {
 		per : {}
 	};
 	$scope.hBills = [];
+	$scope.curHBills = {};
+	$scope.ftbill = {};
 	$scope.resetInfo = function(){
 			$scope.info = { zip : "", reps : {}, sen : {}, per : {}};
 	};
@@ -69,7 +73,7 @@ polApp.controller('ctrl', function($scope) {
 							else{ $scope.info.other[t] = [r[x]]; }
 						}
 				}
-				console.log($scope.info);
+				
 				$scope.dataLoadComplete();
 			}
 		});
@@ -94,7 +98,7 @@ polApp.controller('ctrl', function($scope) {
 	};//END processData
 
 	$scope.dataLoadComplete = function(){
-		console.log('Done Loading');
+		
 		$scope.$apply();
 		setTimeout(function(){
 			$('body').attr('id', 'v2');
@@ -105,32 +109,117 @@ polApp.controller('ctrl', function($scope) {
 	$scope.bringUpDetails = function(id,p){
 		var s = (p == 'Rep') ? $scope.info.reps[id] : $scope.info.sen[id];
 		$scope.info.per = s;
-		console.log(s);
+		
 		setTimeout(function(){
 			$('body').attr('id', 'v3');
 		},500);
 	};//END bringUpDetails
 
 	makeApiCall = function(u,cb){
+		console.log(u);
 		$.ajax({
 			type: 'GET',
 			url: u,
 			success: function(result){
+				// console.log(result);
 				cb(result);
 			}
 		});
 	};//END makeApiCall
-
+	var gTrackBills = {};
+	var sunBills = {};
 	$scope.bringUpSponBills = function(){
 		$('#loading').fadeIn(500);
-		var theId = $scope.info.per.govtrack_id;
-		console.log(theId);
-		makeApiCall('https://www.govtrack.us/api/v2/bill?sponsor='+theId+'&limit=600',fillSponsoredBills);
-	};//END bringUpSponBills
+	
+		var govId = $scope.info.per.govtrack_id;	
+		makeApiCall('https://www.govtrack.us/api/v2/bill?sponsor='+govId+'&limit=50&sort=-introduced_date',handleGovTrack);
 
-	fillSponsoredBills = function(res){
-		console.log(res);
-		$scope.hBills = res.objects;
+	};//END bringUpSponBills
+	$scope.highlightBill =function(num){
+		var bth = $scope.curHBills[num];
+		$scope.ftbill = bth;
+		makeApiCall(bth.govtrack.link+'/summary', getSummary);
+		// makeApiCall('https://www.govtrack.us/api/v2/bill/'+bth.govtrack.id,bringUpHighlightedBill);
+		$('body').attr('id', 'v5');
+	} //END highlightBill
+
+	$scope.cleanupDate = function(dt){
+		var cleaned = dt.split('(')[1].split(',');
+		var ndate = new Date(cleaned[0],cleaned[1],cleaned[2]);
+		return ndate.toDateString().substr(4);
+	} //END cleanupDate
+	getSummary = function(res){
+		var t = $.parseHTML(res);
+		// $scope.ftbill.sunlight.summary =  $(t).find('#libraryofcongress').text();
+		var sum =  [];
+		$(t).find('#libraryofcongress').children().each(function(){
+			sum.push($(this).text());
+		});
+		// sum =sum.join("<br />");
+		console.log(sum);
+		$scope.ftbill.summary = sum;
+		makeApiCall('https://www.govtrack.us/api/v2/bill/'+$scope.ftbill.govtrack.id,bringUpHighlightedBill);
+	}
+	bringUpHighlightedBill = function(res){
+		$scope.ftbill.moreinfo = res;
+		console.log($scope.ftbill);
+		$scope.$apply();
+	}// END bringUpHighlightedBill
+	handleGovTrack= function(res){
+		var r = res.objects;
+		gTrackBills = {};
+		for (var i = 0; i < r.length; i++) {
+			var b= r[i];
+			var tempBill = {};
+			var bNum = b.number;
+			for (var x = 0; x < govBillTerms.length; x++) {
+				var term = govBillTerms[x]
+				tempBill[term] = b[term];
+			};
+			gTrackBills[bNum] = tempBill
+		};
+		var bioId = $scope.info.per.bioguide_id;
+		makeApiCall("http://congress.api.sunlightfoundation.com/bills?sponsor_id="+bioId+"&per_page=50&order=introduced_on&apikey="+token,handleSunlight);
+
+	}
+	handleSunlight= function(res){
+
+		var r = res.results;
+		sunBills = {};
+		for (var i = 0; i < r.length; i++) {
+			var b= r[i];
+			var tempBill = {};
+			var bNum = b.number;
+			for (var x = 0; x < sunBillTerms.length; x++) {
+				var term = sunBillTerms[x]
+				tempBill[term] = b[term];
+			};
+			sunBills[bNum] = tempBill
+		};
+		combineBillData();
+	}
+
+	combineBillData = function(){
+
+		var keys = Object.keys(gTrackBills);
+		var tempBillArray = [];
+		for (var i = 0; i < keys.length; i++) {
+			var tbill = {};
+			
+			tbill.sunlight = sunBills[keys[i]];
+			if(tbill.sunlight === undefined || tbill.sunlight['official_title'].length <1) continue;
+			
+			tbill.govtrack = gTrackBills[keys[i]];
+			tempBillArray.push(tbill);
+			$scope.curHBills[keys[i]] = tbill;
+		};
+		
+		$scope.hBills = tempBillArray;
+		fillSponsoredBills();
+	}
+	
+	fillSponsoredBills = function(){
+		
 		$scope.$apply();
 		setTimeout(function(){
 			$('body').attr('id','v4');
@@ -140,8 +229,6 @@ polApp.controller('ctrl', function($scope) {
 	};//END fill SponsoredBills
 
 });//END ctrl controller
-
-
 
 //Checks That Zip Code Is Valid
 zipFail = function(){
@@ -171,6 +258,9 @@ $(document).on('click','.back',function(){
 		case "4":
 			nl = "v3";
 			break;
+		case "5":
+			nl = "v4";
+			break;	
 		default:
 			nl = "v1";
 			$('#zip').val('').focus();
@@ -185,4 +275,18 @@ $(document).on('keydown','#zip',function(e){
     if($(this).val().length == 5 && k.indexOf(c) == -1){return false; }
 });
 
-$( document ).ready(function(){ $('#zip').focus(); });
+loglogInfo = function(res){
+	//console.log(res);
+	var t = $.parseHTML(res);
+	// console.log(t);
+	console.log($(t).find('#libraryofcongress').text());
+	var sum = $(t).find('#libraryofcongress').children().each(function(){
+		console.log($(this).text())
+	});
+
+}
+
+$( document ).ready(function(){ 
+	$('#zip').focus();
+	
+});
