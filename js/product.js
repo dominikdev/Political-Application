@@ -1,4 +1,4 @@
-var token = "efb161ebb5e043e4a52189aade9a9d52"; //sunlight foundation API Token
+var token = ""; //sunlight foundation API Token
 var polApp = angular.module('polApp', []);
 
 polApp.controller('ctrl', function($scope) {
